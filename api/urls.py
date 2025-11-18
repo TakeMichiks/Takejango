@@ -7,4 +7,5 @@ urlpatterns = [
     path("teachers/datapost", views.teachersdata, name="TeachersDataPOST"),
     path("students/data", views.students, name="TeachersDataGET"),
     path("students/datapost", views.studentsdata, name="TeachersDataPOST"),
+    path("SegureData", views.zipfiles, name="SegureData"),
 ]

@@ -5,13 +5,16 @@ from rest_framework import status
 from django.utils import timezone
 
 # Importacion de Django
-from django.http import JsonResponse
+from django.http import JsonResponse,FileResponse
 
 # Importaciones Adc
 from tinydb import TinyDB
 import zipfile
 from pathlib import Path
+import os
+import io
 
+from .dirs import DATA_DIR
 # Import Serializer
 from .serializer import TeachersSerializer, StudentsSerializer
 
@@ -32,6 +35,28 @@ def time(request):
 
     return JsonResponse({"Hora Actual": hora_str}, status=status.HTTP_200_OK)
 
+
+@api_view(["GET"])
+def zipfiles(request):
+
+    basedir = DATA_DIR
+
+    if not basedir.exists():
+        return JsonResponse("Error no existe la carpeta")
+
+    
+    files = [ Path(root) / name for root,_,names in os.walk(basedir) for name in names]
+
+    memory_zip = io.BytesIO()
+
+    with zipfile.ZipFile(memory_zip, "w", compression=zipfile.ZIP_DEFLATED) as fz:
+        for p in files:
+            arcname = p.relative_to(basedir)
+            fz.write(p,arcname)
+
+    memory_zip.seek(0)
+
+    return FileResponse(memory_zip, as_attachment=True, filename=f"Data_{basedir}.zip")
 
 # ---------- Teachers ----------
 
