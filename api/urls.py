@@ -1,11 +1,16 @@
 from django.urls import path
-from . import views
+from .routes import views
+from .routes import teachers
+from .routes import students
+from .routes import auth
 
 urlpatterns = [
     path("time", views.time, name="Time"),
-    path("teachers/data", views.teachersdata, name="TeachersDataGET"),
-    path("teachers/datapost", views.teachersdata, name="TeachersDataPOST"),
-    path("students/data", views.students, name="TeachersDataGET"),
-    path("students/datapost", views.studentsdata, name="TeachersDataPOST"),
+    path("teachers/data", teachers.teachersdata, name="TeachersDataGET"),
+    path("teachers/datapost", teachers.teachersdata, name="TeachersDataPOST"),
+    path("students/data", students.students, name="TeachersDataGET"),
+    path("students/datapost", students.studentsdata, name="TeachersDataPOST"),
     path("SegureData", views.zipfiles, name="SegureData"),
+    path("register", auth.register, name="register"),
+    path("login", auth.login, name="Login"),
 ]

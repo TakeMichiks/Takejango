@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+# ---------- Students ----------
 class StudentsData(models.Model):
     name = models.CharField(max_length=30, unique=True,blank=False, error_messages={
         "max_length":"maximo numero de caracteres 30",
@@ -32,6 +33,7 @@ class StudentsData(models.Model):
     })
     note = models.CharField(blank=True)
 
+# ---------- Teachers ---------
 class TeachersData(models.Model):
     name = models.CharField(max_length=50, blank=False, error_messages={
         "max_length":"No se puede tener mas de 40 caracteres",
@@ -61,3 +63,16 @@ class TeachersData(models.Model):
         "max_length":"no pude contener mas de 255 caracteres",
     })
 
+class UserData(models.Model):
+    username = models.CharField(max_length=50, blank=False, error_messages={
+        "max_length":"No se puede tener mas de 50 caracteres",
+        "blank":"No puede estar en blanco",
+    })
+    email = models.CharField(max_length=70, blank=False, error_messages={
+        "max_length":"No puede Tener mas de 70 caracteres",
+        "blank":"No puede estar en Blanco",
+    })
+    password = models.CharField(blank=False, max_length=25, error_messages={
+        "blank":"No puede estar en blanco",
+        "max_length":"No puede tener mas de 25 caracteres",
+    })

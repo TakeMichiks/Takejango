@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import StudentsData, TeachersData
-
+from .model.models import StudentsData, TeachersData
 
 @admin.register(StudentsData)
 class StudentsDataAdmin(admin.ModelAdmin):

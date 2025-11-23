@@ -1,6 +1,6 @@
+__pycache__/
 Data/
 .env
 db.sqlite3
 Students_Data.json
 Teachers_Data.json
-settings.py
