@@ -5,12 +5,19 @@ from .routes import students
 from .routes import auth
 
 urlpatterns = [
+    # Urls for views
     path("time", views.time, name="Time"),
-    path("teachers/data", teachers.teachersdata, name="TeachersDataGET"),
-    path("teachers/datapost", teachers.teachersdata, name="TeachersDataPOST"),
+    path("SegureData", views.zipfiles, name="SegureData"),
+
+    # Urls for students
     path("students/data", students.students, name="TeachersDataGET"),
     path("students/datapost", students.studentsdata, name="TeachersDataPOST"),
-    path("SegureData", views.zipfiles, name="SegureData"),
+
+    # Urls for Teachers
+    path("teachers/data", teachers.teachersdata, name="TeachersDataGET"),
+    path("teachers/datapost", teachers.teachersdata, name="TeachersDataPOST"),
+
+    # Urls for Auth
     path("register", auth.register, name="register"),
     path("login", auth.login, name="Login"),
 ]
