@@ -2,16 +2,27 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
 
 # authenticadores
-from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework.permissions import AllowAny
+from django.utils import timezone
 
 # Serializer Principal
 from ..model.serializer import UserRegisterSerializer
 
+# Tablas de Tyni
+from ..tablas.jsontablas import tablaData
+
+# ----- Endpoint Tempo -------
+def time():
+    timeactual = timezone.now()
+    timeBase = timezone.localtime(timeactual)
+    timestring = timeBase.strftime("%I:%M:%S:%p")
+
+    return timestring
 
 # --- ENDPOINT REGISTRO ---
 @api_view(['POST'])
@@ -25,12 +36,22 @@ def register(request):
         
         # 2. Creamos (o recuperamos) el token para este usuario
         token, created = Token.objects.get_or_create(user=user)
+        time_str = time() 
+
+        datos_a_guardar = {
+            "user":serializer.data,
+            "token": token.key,
+            "created_at":time_str
+        }
+
+        datos = tablaData.insert(datos_a_guardar)
         
         # 3. Devolvemos usuario y token
         return Response({
             "user": serializer.data,
             "token": token.key,
-            "message": "Usuario creado exitosamente"
+            "message": "Usuario creado exitosamente",
+            "datos": f"Guaradados {datos}"
         }, status=status.HTTP_201_CREATED)
         
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -70,5 +91,4 @@ def login(request):
             "email": user.email
         }, status=status.HTTP_200_OK)
     else:
-        # Credenciales incorrectas
         return Response({"error": "Credenciales inválidas"}, status=status.HTTP_401_UNAUTHORIZED)
