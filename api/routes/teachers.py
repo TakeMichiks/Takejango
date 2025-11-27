@@ -3,9 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 
+# Implementacion de Tablas Json
 from ..tablas.jsontablas import tableTeachers
+
+# Serializacion 
 from ..model.serializer import TeachersSerializer
 
+# Mongo Conections
+from ..mongo.client import collectionTeachers
 # ---------- Teachers ----------
 
 @api_view(["GET"])
@@ -30,6 +35,8 @@ def teachersdata(request):
     # Guardar en SQLite
     teacher = ser.save()
 
+    # Guardado a Mongo
+    mongo = collectionTeachers.insert_one(ser.validated_data)
     # Guardar también en TinyDB (Teachers_Data.json)
     tableTeachers.insert(ser.validated_data)
 
@@ -38,6 +45,7 @@ def teachersdata(request):
             "message": "Profesor guardado en SQLite y en JSON",
             "sqlite_id": teacher.id,
             "data": ser.data,
+            "guardao": mongo,
         },
         status=status.HTTP_201_CREATED,
     )

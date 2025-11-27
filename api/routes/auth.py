@@ -16,6 +16,9 @@ from ..model.serializer import UserRegisterSerializer
 # Tablas de Tyni
 from ..tablas.jsontablas import tablaData
 
+# Importacion de Mongo
+from ..mongo.client import collection
+
 # ----- Endpoint Tempo -------
 def time():
     timeactual = timezone.now()
@@ -45,13 +48,15 @@ def register(request):
         }
 
         datos = tablaData.insert(datos_a_guardar)
+
+        mongo = collection.insert_one(datos_a_guardar)
         
         # 3. Devolvemos usuario y token
         return Response({
             "user": serializer.data,
             "token": token.key,
             "message": "Usuario creado exitosamente",
-            "datos": f"Guaradados {datos}"
+            "datos": f"Guaradados {datos} {mongo}"
         }, status=status.HTTP_201_CREATED)
         
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

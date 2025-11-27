@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 from ..model.serializer import StudentsSerializer
 from ..tablas.jsontablas import tableStudents 
-
+from ..mongo.client import collectionStudents
 # ---------- Students ----------
 
 @api_view(["GET"])
@@ -30,6 +30,7 @@ def studentsdata(request):
     student = ser.save()
 
     # Guardar también en TinyDB (Stundents_Data.json, tabla Students)
+    mongo = collectionStudents.insert_one(ser.validated_data)
     tableStudents.insert(ser.validated_data)
 
     return Response(
@@ -37,6 +38,7 @@ def studentsdata(request):
             "message": "Estudiante guardado en SQLite y en JSON",
             "sqlite_id": student.id,
             "data": ser.data,
+            "guardado": mongo,
         },
         status=status.HTTP_201_CREATED,
     )
